@@ -1,5 +1,7 @@
 package deque;
 
+import java.util.Comparator;
+
 public class DoubleLinkedList<T> implements DoubleLinkedQueue<T> {
 
     private LinkedNode<T> first;
@@ -85,6 +87,69 @@ public class DoubleLinkedList<T> implements DoubleLinkedQueue<T> {
     @Override
     public int size() {
         return size;
+    }
+
+    @Override
+    public T get(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index is out of range");
+        }
+        LinkedNode<T> current = first;
+        for (int i = 0; i < index; i++) {
+            current = current.getNext();
+        }
+        return current.getItem();
+    }
+
+    @Override
+    public boolean contains(T value) {
+        LinkedNode<T> current = first;
+        while (current != null) {
+            if (current.getItem().equals(value)) {
+                return true;
+            }
+            current = current.getNext();
+        }
+        return false;
+    }
+
+    @Override
+    public void remove(T value) {
+        LinkedNode<T> current = first;
+        while (current != null) {
+            if (current.getItem().equals(value)) {
+                if (current == first) {
+                    deleteFirst();
+                } else if (current == last) {
+                    deleteLast();
+                } else {
+                    current.getPrevious().setNext(current.getNext());
+                    current.getNext().setPrevious(current.getPrevious());
+                    size--;
+                }
+                return;
+            }
+            current = current.getNext();
+        }
+    }
+
+    @Override
+    public void sort(Comparator<? super T> comparator) {
+        @SuppressWarnings("unchecked")
+        T[] array = (T[]) new Object[size];
+        LinkedNode<T> current = first;
+        for (int i = 0; i < size; i++) {
+            array[i] = current.getItem();
+            current = current.getNext();
+        }
+
+        java.util.Arrays.sort(array, comparator);
+
+        current = first;
+        for (T element : array) {
+            current.setItem(element);
+            current = current.getNext();
+        }
     }
 
     private boolean isEmpty() {
