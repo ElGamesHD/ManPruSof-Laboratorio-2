@@ -30,7 +30,17 @@ public class DoubleLinkedListTest {
         @Test
         @DisplayName("Al hacer preprend, el único elemento que hay es el añadido, que es además el primero y el último")
         public void prepend_AfterConstructor_UniqueNode() {
+            Object item = "Elemento 1";
+            Object expectedFirst = item;
+            Object expectedLast = item;
 
+            doubleLinkedList.prepend(item);
+
+            Object actualFirst = doubleLinkedList.first();
+            Object actualLast = doubleLinkedList.last();
+
+            assertEquals(expectedFirst, actualFirst);
+            assertEquals(expectedLast, actualLast);
         }
 
         @Test
