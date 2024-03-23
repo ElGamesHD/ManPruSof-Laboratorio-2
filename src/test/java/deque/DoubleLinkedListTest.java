@@ -1,7 +1,9 @@
 package deque;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -276,6 +278,111 @@ public class DoubleLinkedListTest {
             int actualSize = doubleLinkedList.size();
 
             assertEquals(expectedSize, actualSize);
+        }
+    }
+
+    @Nested
+    @DisplayName("Tests que comprueban el método get")
+    class Get {
+
+        @Test
+        @DisplayName("Al hacer get de la estructura vacía, se lanza un error")
+        public void get_EmptyList_ThrowsError() {
+            int index = 0;
+
+            assertThrows(DoubleLinkedQueueException.class, () -> {
+                doubleLinkedList.get(index);
+            });
+        }
+
+        @Test
+        @DisplayName("Al hacer get con un índice negativo, se debe lanzar un error")
+        public void get_NegativeIndex_ThrowsError() {
+            doubleLinkedList.prepend("Elemento 1");
+            int index = -1;
+
+            assertThrows(DoubleLinkedQueueException.class, () -> doubleLinkedList.get(index));
+        }
+
+        @Test
+        @DisplayName("Al hacer get con un índice mayor que el tamaño de la estructura," +
+                "se debe lanzar un error")
+        public void get_IndexOutOfBounds_ThrowsError() {
+            doubleLinkedList.prepend("Elemento 1");
+            doubleLinkedList.prepend("Elemento 2");
+            doubleLinkedList.prepend("Elemento 3");
+            doubleLinkedList.prepend("Elemento 4");
+            doubleLinkedList.prepend("Elemento 5");
+            int indice = 6;
+
+            assertThrows(DoubleLinkedQueueException.class, () -> doubleLinkedList.get(indice));
+        }
+
+        @ParameterizedTest
+        @CsvSource({
+                "0", "1", "2", "3", "4", "5"
+        })
+        @DisplayName("Al hacer get con un índice correcto, te debe devolver el valor correcto")
+        public void get_ValidIndex_ReturnsElement(int index) {
+            Object[] datos = { "Elemento 6", "Elemento 5", "Elemento 4",
+                    "Elemento 3", "Elemento 2", "Elemento 1" };
+            doubleLinkedList.prepend(datos[0]);
+            doubleLinkedList.prepend(datos[1]);
+            doubleLinkedList.prepend(datos[2]);
+            doubleLinkedList.prepend(datos[3]);
+            doubleLinkedList.prepend(datos[4]);
+            doubleLinkedList.prepend(datos[5]);
+            Object expected = datos[datos.length - index - 1];
+
+            Object actual = doubleLinkedList.get(index);
+
+            assertEquals(expected, actual);
+        }
+    }
+
+    @Nested
+    @DisplayName("Tests que comprueban el método contains")
+    class Contains {
+
+        @Test
+        @DisplayName("Al hacer contains de la estructura vacía, se devuelve false")
+        public void contains_EmptyList_ReturnFalse() {
+            Object item = "Elemento 1";
+
+            boolean actual = doubleLinkedList.contains(item);
+
+            assertFalse(actual);
+        }
+
+        @Test
+        @DisplayName("AL hacer contains de la estructura con un elemento que no está, se devuelve false")
+        public void contains_ElementNotInList_ReturnFalse() {
+            doubleLinkedList.prepend("Elemento 1");
+            doubleLinkedList.prepend("Elemento 2");
+            doubleLinkedList.prepend("Elemento 3");
+            Object item = "Elemento 4";
+
+            boolean result = doubleLinkedList.contains(item);
+
+            assertFalse(result);
+        }
+
+        @ParameterizedTest
+        @CsvSource({
+                "Elemento 1", "Elemento 3", "Elemento 4", "Elemento 6"
+        })
+        @DisplayName("Al hacer contains de la estructura con un elemento que está, se devuelve true")
+        public void contains_ElementInList_ReturnTrue(Object item) {
+            doubleLinkedList.prepend("Elemento 1");
+            doubleLinkedList.prepend("Elemento 2");
+            doubleLinkedList.prepend("Elemento 3");
+            doubleLinkedList.prepend("Elemento 4");
+            doubleLinkedList.prepend("Elemento 5");
+            doubleLinkedList.prepend("Elemento 6");
+
+            boolean result = doubleLinkedList.contains(item);
+
+            assertTrue(result);
         }
     }
 }

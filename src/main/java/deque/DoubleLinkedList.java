@@ -92,7 +92,7 @@ public class DoubleLinkedList<T> implements DoubleLinkedQueue<T> {
     @Override
     public T get(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index is out of range");
+            throw new DoubleLinkedQueueException("Index is out of range");
         }
         LinkedNode<T> current = first;
         for (int i = 0; i < index; i++) {
